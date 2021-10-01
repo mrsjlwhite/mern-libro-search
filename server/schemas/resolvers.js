@@ -4,13 +4,8 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
     Query: {
-        getSingleUser: async(parent, {username, _id}) => {
-            let userData = {};
-          if(username) {
-              userData = await User.findOne({username})
-          } else {
-              userData = await User.findOne({_id})
-          }
+        getSingleUser: async (parent, {username, _id}) => {
+          let userData = username ? await User.findOne({username}) : await User.findOne({_id});
           
           if(!userData) {
               throw new Error('Unable to get User');
@@ -44,15 +39,15 @@ const resolvers = {
         },
         saveBook: async (parent, args, context) => {
           if (context.user) {
-            const user = await User.findOneAndUpdate({ ...args, username: context.user.username });
+            const book = await Book.create({ ...args, username: context.user.username });
         
             await User.findByIdAndUpdate(
               { _id: context.user._id },
-              { $push: { savedBooks: body } },
+              { $push: { savedBooks: book } },
               { new: true }
             );
         
-            return user;
+            return book;
           }
         
           throw new AuthenticationError('You need to be logged in!');
