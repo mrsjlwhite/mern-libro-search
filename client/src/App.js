@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
-import  ApolloProvider  from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
 import { ApolloClient, InMemoryCache  } from 'apollo-boost';
 import { setContext } from '@apollo/client/link/context';
 import  { HttpLink } from '@apollo/client';
