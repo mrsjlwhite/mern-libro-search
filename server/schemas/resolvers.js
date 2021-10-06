@@ -46,10 +46,11 @@ const resolvers = {
     },
     saveBook: async (parent, args, context) => {
       if (context.user) {
-        const book = await Book.create({ ...args, username: context.user.username });
+        const user = context.user;
+        const book = await Book.create({ ...args });
 
         await User.findByIdAndUpdate(
-          { _id: context.user._id },
+          { _id: user._id },
           { $push: { savedBooks: book } },
           { new: true }
         );
