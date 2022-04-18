@@ -4,12 +4,11 @@ const { signToken } = require('../utils/auth');
 
 const resolvers = {
   Query: {
-    me: async (parent, args, context) => {
+    getMe: async (parent, args, context) => {
       if (context.user) {
         const userData = await User.findOne({ _id: context.user._id })
           .select('-__v -password')
-          .populate('thoughts')
-          .populate('friends');
+          .populate('savedBooks');
     
         return userData;
       }
@@ -46,7 +45,7 @@ const resolvers = {
     
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $push: { thosavedBooksughts: thought._id } },
+          { $push: { savedBooks: book._id } },
           { new: true }
         ).populate('savedBooks');
     
