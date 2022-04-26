@@ -12,7 +12,7 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-  
+  // use graphql mutation
   const [addUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -34,11 +34,7 @@ const SignupForm = () => {
       const { response } = await addUser({
         variables: { ...userFormData }
       });
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-      
+      setShowAlert(false);
       Auth.login(response.addUser.token);
     } catch (err) {
       console.error(err);
