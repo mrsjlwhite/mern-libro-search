@@ -8,6 +8,10 @@ import { ApolloClient, InMemoryCache  } from 'apollo-boost';
 import { setContext } from '@apollo/client/link/context';
 import { HttpLink } from '@apollo/client';
 
+const httpLink = new HttpLink({
+  uri: '/graphql'
+});
+
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('id_token');
   return {
@@ -16,10 +20,6 @@ const authLink = setContext((_, { headers }) => {
       authorization: token ? `Bearer ${token}` : '',
     },
   };
-});
-
-const httpLink = new HttpLink({
-  uri: '/graphql'
 });
 
 const client = new ApolloClient({
