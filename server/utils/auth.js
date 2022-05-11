@@ -20,7 +20,6 @@ module.exports = {
     }
 
     if (!token) {
-      // return res.sendStatus(400).json({ message: 'You have no token!' });
       return res;
     }
 
@@ -30,7 +29,6 @@ module.exports = {
       req.user = data;
     } catch {
       console.error('Invalid token at server/utils/auth.js');
-      // return res.status(400).json({ message: 'invalid token!' });
     }
     
     // return updated request object
