@@ -69,11 +69,9 @@ const SearchBooks = () => {
     }
 
     try {
-      console.log({bookToSave});
-      const { error } = await saveBook({
-        variables: {
-          ...bookToSave
-        }
+      const dto = { input: { ...bookToSave } };
+      const { data, error } = await saveBook({
+        variables: dto
       });
       
       if (error) {
@@ -81,10 +79,13 @@ const SearchBooks = () => {
         throw new Error('something went wrong!');
       }
 
-      // if book successfully saves to user's account, save book id to state
-      setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      const bookSaved = data.saveBook.savedBooks.find(b => b?.bookId === bookToSave.bookId);
+      if (bookSaved) {
+        // if book successfully saves to user's account, save book id to state
+        setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      }
     } catch (err) {
-      console.error(err);
+      console.log({err});
     }
   };
 
