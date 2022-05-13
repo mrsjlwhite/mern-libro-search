@@ -17,7 +17,6 @@ const SearchBooks = () => {
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
   
   const [saveBook] = useMutation(SAVE_BOOK);
-  
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
   // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
   useEffect(() => {
@@ -47,9 +46,9 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
-        googleLink: book.saleInfo.buyLink
+        link: book.saleInfo.buyLink ?? ''
       }));
-
+      
       setSearchedBooks(bookData);
       setSearchInput('');
     } catch (err) {
@@ -70,9 +69,15 @@ const SearchBooks = () => {
     }
 
     try {
-      const response = await saveBook(bookToSave, token);
-
-      if (!response.ok) {
+      console.log({bookToSave});
+      const { error } = await saveBook({
+        variables: {
+          ...bookToSave
+        }
+      });
+      
+      if (error) {
+        console.log({error});
         throw new Error('something went wrong!');
       }
 
@@ -127,8 +132,8 @@ const SearchBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
-                  {book.googleLink ? (
-                    <Card.Link href={book.googleLink} target="_blank">
+                  {book.link ? (
+                    <Card.Link href={book.link} target="_blank">
                       Google Book Page
                     </Card.Link>
                     ) :

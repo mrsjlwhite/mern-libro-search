@@ -41,11 +41,17 @@ const resolvers = {
     },
     saveBook: async (parent, args, context) => {
       if (context.user) {
-        const book = await Book.create({ ...args, username: context.user.username });
-    
+        const { input } = args;
+        const book = input ? { ...input } : null;
+        
+        if (!book) {
+          console.log('🚨 Missing book from request!');
+          return await User.findOne({ _id: context.user._id }).populate('savedBooks');
+        }
+        
         const updatedUser = await User.findByIdAndUpdate(
           { _id: context.user._id },
-          { $push: { savedBooks: book._id } },
+          { $push: { savedBooks: book } },
           { new: true }
         ).populate('savedBooks');
     
