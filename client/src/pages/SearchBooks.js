@@ -88,6 +88,10 @@ const SearchBooks = () => {
       console.log({err});
     }
   };
+  
+  const handleGooglePageRedirect = (link) => {
+    window.open(link, "_blank");
+  };
 
   return (
     <>
@@ -133,18 +137,18 @@ const SearchBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
-                  {book.link ? (
-                    <Card.Link href={book.link} target="_blank">
-                      Google Book Page
-                    </Card.Link>
-                    ) :
-                    (
-                      <Card.Text>Does not have a Google Book Page</Card.Text>
-                    )}
+                  <Button
+                      disabled={!book.link}
+                      className='btn-block btn-info'
+                      onClick={() => handleGooglePageRedirect(book.link)}>
+                      {book.link
+                        ? 'Google Book Page'
+                        : 'No Google Page Available'}
+                    </Button>
                   {Auth.loggedIn() && (
                     <Button
                       disabled={savedBookIds?.some((savedBookId) => savedBookId === book.bookId)}
-                      className='btn-block btn-info'
+                      className='btn-block btn-primary'
                       onClick={() => handleSaveBook(book.bookId)}>
                       {savedBookIds?.some((savedBookId) => savedBookId === book.bookId)
                         ? 'This book has already been saved!'
